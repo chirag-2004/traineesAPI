@@ -17,12 +17,10 @@
 
     <properties>
         <java.version>17</java.version>
-        <!-- SonarQube Properties -->
+        <!-- SonarQube Properties — NO TOKEN HERE ✅ -->
         <sonar.host.url>http://localhost:9000</sonar.host.url>
         <sonar.projectKey>traineeAPI</sonar.projectKey>
         <sonar.projectName>traineeAPI</sonar.projectName>
-        <sonar.token>squ_1938b51b8228d27ca55ba2917fd15c47c98c65f3</sonar.token>
-        <!-- ✅ JaCoCo XML Report Path for SonarQube -->
         <sonar.coverage.jacoco.xmlReportPaths>
             target/site/jacoco/jacoco.xml
         </sonar.coverage.jacoco.xmlReportPaths>
@@ -61,20 +59,18 @@
                 <artifactId>spring-boot-maven-plugin</artifactId>
             </plugin>
 
-            <!-- ✅ JaCoCo Plugin - MANDATORY FOR COVERAGE -->
+            <!-- ✅ JaCoCo Plugin -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.11</version>
                 <executions>
-                    <!-- Prepare agent before tests run -->
                     <execution>
                         <id>prepare-agent</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
-                    <!-- Generate report after tests run -->
                     <execution>
                         <id>report</id>
                         <phase>verify</phase>
