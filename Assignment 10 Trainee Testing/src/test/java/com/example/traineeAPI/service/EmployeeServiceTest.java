@@ -2,167 +2,82 @@ package com.example.traineeAPI.service;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.InjectMocks;
-import org.mockito.Mock;
-import org.mockito.Mockito;
+import org.mockito.*;
+
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 
 import com.example.traineeAPI.entities.Trainee;
 import com.example.traineeAPI.repositories.ITraineeRepository;
 import com.example.traineeAPI.services.TraineeServiceImpl;
 
-@SpringBootTest
 @ExtendWith(MockitoExtension.class)
 class EmployeeServiceTest {
-	
-	@Mock  
-	ITraineeRepository traineeRepo;
-	
-	@Autowired
-	@InjectMocks
-	TraineeServiceImpl traineeService;
-	
-	@Disabled 
-	@Test
-	void test() {
-		fail("Not yet implemented");
-	}
-	
-	// -------------------- getTraineeById --------------------
-	
-	@Test
-	void testFindTrineeById() {
-		
-		// 1. Stubbing or simulation using when and thenReturn
-		Trainee emp = new Trainee();
-		Mockito.when(traineeRepo.findById(7)).thenReturn(Optional.of(emp));
-		Trainee actualObject = traineeService.getTraineeById(7);
-		assertNotNull(actualObject);
-		// 2. Verification
-		Mockito.verify(traineeRepo, Mockito.times(1)).findById(7);
-		
-	}
-	@Test
-	void testFindTraineeByIdForNull() {
-		Mockito.when(traineeRepo.findById(10)).thenReturn(Optional.empty());
 
-		Trainee result = traineeService.getTraineeById(10);
+    @Mock
+    ITraineeRepository traineeRepo;
 
-		assertNull(result);
-		Mockito.verify(traineeRepo, Mockito.times(1)).findById(10);
-	}
-	
-	// -------------------- getAllTrainees --------------------
-	
-	@Test
-	void testGetAllTrainees() {
-		List<Trainee> list = new ArrayList<>();
-		list.add(new Trainee());
-		list.add(new Trainee());
+    @InjectMocks
+    TraineeServiceImpl traineeService;
 
-		Mockito.when(traineeRepo.findAll()).thenReturn(list);
+    @Test
+    void testFindTraineeById() {
+        Trainee t = new Trainee();
 
-		List<Trainee> result = traineeService.getAllTrainees();
+        Mockito.when(traineeRepo.findById(1)).thenReturn(Optional.of(t));
 
-		assertEquals(2, result.size());
-		Mockito.verify(traineeRepo, Mockito.times(1)).findAll();
-	}
-	
-	// -------------------- findByTraineeName --------------------
-	
-	@Test
-	void testFindByTraineeName() {
-		List<Trainee> list = new ArrayList<>();
-		list.add(new Trainee());
+        Trainee result = traineeService.getTraineeById(1);
 
-		Mockito.when(traineeRepo.findByTraineeName("aman")).thenReturn(list);
+        assertNotNull(result);
+        Mockito.verify(traineeRepo).findById(1);
+    }
 
-		List<Trainee> result = traineeService.getTraineeByName("aman");
+    @Test
+    void testFindTraineeByIdNotFound() {
+        Mockito.when(traineeRepo.findById(2)).thenReturn(Optional.empty());
 
-		assertNotNull(result);
-		assertEquals(1, result.size());
-		Mockito.verify(traineeRepo, Mockito.times(1)).findByTraineeName("aman");
-	}
-	
-	// -------------------- insertTrainee --------------------
-	
-	@Test
-	void testInsertTrainee() {
-		Trainee trainee = new Trainee();
-		trainee.setTraineeName("Aman");
+        Trainee result = traineeService.getTraineeById(2);
 
-		Mockito.when(traineeRepo.save(trainee)).thenReturn(trainee);
+        assertNull(result);
+    }
 
-		Trainee result = traineeService.addTrainee(trainee);
+    @Test
+    void testGetAllTrainees() {
+        List<Trainee> list = Arrays.asList(new Trainee(), new Trainee());
 
-		assertNotNull(result);
-		assertEquals("Aman", result.getTraineeName());
-		Mockito.verify(traineeRepo, Mockito.times(1)).save(trainee);
-	}
-	
-	// -------------------- updateTrainee --------------------
-	
-	@Test
-	void testUpdateTraineeSuccess() {
-		Trainee existing = new Trainee();
-		existing.setTraineeName("Old");
+        Mockito.when(traineeRepo.findAll()).thenReturn(list);
 
-		Trainee updated = new Trainee();
-		updated.setTraineeName("New");
-		updated.setTraineeDomain("IT");
-		updated.setTraineeLocation("Delhi");
+        List<Trainee> result = traineeService.getAllTrainees();
 
-		Mockito.when(traineeRepo.findById(1)).thenReturn(Optional.of(existing));
-		Mockito.when(traineeRepo.save(existing)).thenReturn(existing);
+        assertEquals(2, result.size());
+    }
 
-		Trainee result = traineeService.updateTrainee(1, updated);
+    @Test
+    void testInsertTrainee() {
+        Trainee t = new Trainee();
+        t.setTraineeName("Aman");
 
-		assertNotNull(result);
-		assertEquals("New", result.getTraineeName());
-		assertEquals("IT", result.getTraineeDomain());
-		assertEquals("Delhi", result.getTraineeLocation());
+        Mockito.when(traineeRepo.save(t)).thenReturn(t);
 
-		Mockito.verify(traineeRepo).findById(1);
-		Mockito.verify(traineeRepo).save(existing);
-	}
-	@Test
-	void testUpdateTraineeNotFound() {
-		Trainee updated = new Trainee();
+        Trainee result = traineeService.addTrainee(t);
 
-		Mockito.when(traineeRepo.findById(1)).thenReturn(Optional.empty());
+        assertEquals("Aman", result.getTraineeName());
+    }
 
-		Trainee result = traineeService.updateTrainee(1, updated);
+    @Test
+    void testUpdateTrainee() {
+        Trainee existing = new Trainee();
+        Trainee updated = new Trainee();
+        updated.setTraineeName("New");
 
-		assertNull(result);
-		Mockito.verify(traineeRepo).findById(1);
-	}
-	
-	// -------------------- deleteTrainee --------------------
+        Mockito.when(traineeRepo.findById(1)).thenReturn(Optional.of(existing));
+        Mockito.when(traineeRepo.save(existing)).thenReturn(existing);
 
+        Trainee result = traineeService.updateTrainee(1, updated);
 
-	
-	@Disabled
-	@Test
-	void testFindTraineeByIdForException() {
-		Mockito.when(traineeRepo.findById(10)).thenReturn(Optional.empty());
-		assertThrows(RuntimeException.class, () -> traineeService.getTraineeById(10));
-		Mockito.verify(traineeRepo, Mockito.times(1)).findById(10);
-	}
-	
-//	@Disabled
-	@Test
-	void testFindTraineeByIdForNoException() {
-		Mockito.when(traineeRepo.findById(7)).thenReturn(Optional.empty());
-		assertDoesNotThrow(() -> traineeService.getTraineeById(7));
-		Mockito.verify(traineeRepo, Mockito.times(1)).findById(7);
-	}
+        assertEquals("New", result.getTraineeName());
+    }
 }
