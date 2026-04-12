@@ -2,76 +2,79 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
     xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
-
     <modelVersion>4.0.0</modelVersion>
-
     <parent>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-starter-parent</artifactId>
-        <version>3.2.5</version> <!-- ✅ FIXED (4.0.3 is wrong) -->
+        <version>4.0.3</version>
         <relativePath/>
     </parent>
-
     <groupId>com.example</groupId>
     <artifactId>traineeAPI</artifactId>
     <version>0.0.1-SNAPSHOT</version>
     <name>traineeAPI</name>
+    <description>Trainee API Project</description>
 
     <properties>
         <java.version>17</java.version>
-
-        <!-- Sonar -->
+        <!-- SonarQube Properties -->
         <sonar.host.url>http://localhost:9000</sonar.host.url>
         <sonar.projectKey>traineeAPI</sonar.projectKey>
         <sonar.projectName>traineeAPI</sonar.projectName>
+        <sonar.token>squ_1938b51b8228d27ca55ba2917fd15c47c98c65f3</sonar.token>
+        <!-- ✅ JaCoCo XML Report Path for SonarQube -->
+        <sonar.coverage.jacoco.xmlReportPaths>
+            target/site/jacoco/jacoco.xml
+        </sonar.coverage.jacoco.xmlReportPaths>
     </properties>
 
     <dependencies>
-
-        <!-- Web -->
+        <!-- Spring Boot Web -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-web</artifactId>
         </dependency>
-
         <!-- JPA -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-data-jpa</artifactId>
         </dependency>
-
         <!-- PostgreSQL -->
         <dependency>
             <groupId>org.postgresql</groupId>
             <artifactId>postgresql</artifactId>
             <scope>runtime</scope>
         </dependency>
-
-        <!-- Testing (JUnit + Mockito included) -->
+        <!-- Testing -->
         <dependency>
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-starter-test</artifactId>
             <scope>test</scope>
         </dependency>
-
     </dependencies>
 
     <build>
         <plugins>
+            <!-- Spring Boot Plugin -->
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
 
-            <!-- ✅ JaCoCo (MANDATORY FOR COVERAGE) -->
+            <!-- ✅ JaCoCo Plugin - MANDATORY FOR COVERAGE -->
             <plugin>
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.11</version>
-
                 <executions>
+                    <!-- Prepare agent before tests run -->
                     <execution>
+                        <id>prepare-agent</id>
                         <goals>
                             <goal>prepare-agent</goal>
                         </goals>
                     </execution>
-
+                    <!-- Generate report after tests run -->
                     <execution>
                         <id>report</id>
                         <phase>verify</phase>
@@ -82,20 +85,12 @@
                 </executions>
             </plugin>
 
-            <!-- Sonar -->
+            <!-- SonarQube Plugin -->
             <plugin>
                 <groupId>org.sonarsource.scanner.maven</groupId>
                 <artifactId>sonar-maven-plugin</artifactId>
-                <version>3.10.0.2594</version>
+                <version>5.0.0.4389</version>
             </plugin>
-
-            <!-- Spring Boot -->
-            <plugin>
-                <groupId>org.springframework.boot</groupId>
-                <artifactId>spring-boot-maven-plugin</artifactId>
-            </plugin>
-
         </plugins>
     </build>
-
 </project>
